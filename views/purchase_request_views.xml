@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Form view -->
+    <record id="purchase_request_view_form" model="ir.ui.view">
+        <field name="name">purchase.request.view.list</field>
+        <field name="model">purchase.order</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Request" class="o_purchase_order">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Purchase Request</span>
+                        <h1 class="d-flex">
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="partner_ref"/>
+                        </group>
+                        <group>
+                            <field name="best_offer" string="Best bid" widget="monetary"/>
+                            <field name="date_order" />
+                            <label for="date_approve" />
+                            <div name="date_approve" invisible="state not in ('purchase', 'done')" class="o_row">
+                                <field name="date_approve" field_id="date_approve_0"/>
+                                <field name="mail_reception_confirmed" invisible="1" field_id="mail_reception_confirmed_0"/>
+                                <span class="text-muted" invisible="not mail_reception_confirmed">(confirmed by vendor)</span>
+                            </div>
+                            <label for="date_planned"/>
+                            <div name="date_planned_div" class="o_row">
+                                <field name="date_planned" on_change="1" field_id="date_planned_0"/>
+                                <field name="mail_reminder_confirmed" invisible="1" field_id="mail_reminder_confirmed_0"/>
+                                <span class="text-muted" invisible="not mail_reminder_confirmed">(confirmed by vendor)</span>
+                            </div>
+                        </group>
+                        <notebook>
+                            <page string="Products" name="products">
+                                <tree string="Purchase Order Lines" editable="bottom">
+                                    <field name="tax_calculation_rounding_method" column_invisible="True"/>
+                                    <field name="display_type" column_invisible="True"/>
+                                    <field name="company_id" column_invisible="True" on_change="1"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="state" column_invisible="True"/>
+                                    <field name="product_type" column_invisible="True"/>
+                                    <field name="product_uom" column_invisible="True" on_change="1" can_create="True" can_write="True"/>
+                                    <field name="product_uom_category_id" column_invisible="True"/>
+                                    <field name="invoice_lines" column_invisible="True" on_change="1"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id" required="not display_type" width="35%"/>
+                                    <field name="name" widget="section_and_note_text"/>
+                                    <field name="date_planned" optional="hide" required="not display_type" force_save="1" on_change="1"/>
+                                    <field name="product_qty" on_change="1"/>
+                                    <field name="qty_received_manual" column_invisible="True" on_change="1"/>
+                                    <field name="qty_received_method" column_invisible="True" on_change="1"/>
+                                    <field name="qty_received" string="Received" column_invisible="parent.state not in ('purchase', 'done')" readonly="qty_received_method != 'manual'" optional="show" on_change="1"/>
+                                    <field name="qty_invoiced" string="Billed" column_invisible="parent.state not in ('purchase', 'done')" optional="show"/>
+                                    <field name="price_unit" readonly="qty_invoiced != 0" on_change="1"/>
+                                    <button name="action_purchase_history" type="object" icon="fa-history" title="Purchase History" invisible="not id"/>
+                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show" on_change="1" can_create="True" can_write="True"/>
+                                    <field name="discount" string="Disc.%" readonly="qty_invoiced != 0" optional="hide" on_change="1"/>
+                                    <field name="price_subtotal" string="Tax excl." on_change="1"/>
+                                    <field name="price_total" string="Tax incl." column_invisible="parent.tax_calculation_rounding_method == 'round_globally'" optional="hide" on_change="1"/>
+                                </tree>
+                            </page>
+                            <page string="Other Information" name="purchase_delivery_invoice">
+                                <group>
+                                    <group name="other_info">
+                                        <field name="user_id" widget="many2one_avatar_user" field_id="user_id_0"/>
+                                        <field name="origin" field_id="origin_0"/>
+                                    </group>
+                                    <group name="invoice_info">
+                                        <field name="invoice_status" invisible="state in ('draft', 'sent', 'to approve', 'cancel')" field_id="invoice_status_0"/>
+                                        <field name="payment_term_id" readonly="invoice_status == 'invoiced' or state == 'done'" options="{'no_create': True}" can_create="True" can_write="True" field_id="payment_term_id_0"/>
+                                        <field name="fiscal_position_id" options="{'no_create': True}" readonly="invoice_status == 'invoiced' or state == 'done'" on_change="1" can_create="True" can_write="True" field_id="fiscal_position_id_0"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                        </notebook>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

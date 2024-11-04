@@ -1,74 +1,62 @@
-## Notes about the purchase module
+Odoo Supply Chain
+-----------------
 
-## MailHog
+Automate requisition-to-pay, control invoicing with the Odoo
+<a href="https://www.odoo.com/app/purchase">Open Source Supply Chain</a>.
 
-##
-It seems like sending mass mails requires composition_mode set to mass_mail
+Automate procurement propositions, launch request for quotations, track
+purchase orders, manage vendors' information, control products reception and
+check vendors' invoices.
 
-In Odoo, the `MailComposer` model from the `mail_compose_message.py` file is used to prepare and send mail messages, including notifications and email communications. To send mass mail, you can use the `mail.compose.message` model along with the `send_mail` method to batch-send emails.
+Automated Procurement Propositions
+----------------------------------
 
-Here’s a guide to use `MailComposer` in the context of sending a mass email:
+Reduce inventory level with procurement rules. Get the right purchase
+proposition at the right time to reduce your inventory level. Improve your
+purchase and inventory performance with procurement rules depending on stock
+levels, logistic rules, sales orders, forecasted manufacturing orders, etc.
 
-### Step 1: Set Up MailComposer in Your Python Code
-Create an instance of the `mail.compose.message` model and prepare the data for sending emails.
+Send requests for quotations or purchase orders to your vendor in one click.
+Get access to product receptions and invoices from your purchase order.
 
-### Example Code
+Purchase Tenders
+----------------
 
-```python
-from odoo import models, api
+Launch purchase tenders, integrate vendor's answers in the process and
+compare propositions. Choose the best offer and send purchase orders easily.
+Use reporting to analyse the quality of your vendors afterwards.
 
-class MailComposerMassMail(models.Model):
-    _inherit = 'mail.compose.message'
 
-    @api.model
-    def send_mass_mail(self, recipient_ids, subject, body, model, res_id):
-        # Prepare the context with message details
-        context = dict(
-            self.env.context,
-            default_composition_mode='mass_mail',  # Set mode to mass mail
-            default_use_template=False,
-            default_model=model,
-            default_res_id=res_id,
-            default_subject=subject,
-            default_body=body,
-        )
+Email integrations
+------------------
 
-        # Create a composer object with the specified context
-        composer = self.env['mail.compose.message'].with_context(context).create({
-            'subject': subject,
-            'body': body,
-            'model': model,
-            'res_id': res_id,
-        })
+Integrate all vendor's communications on the purchase orders (or RfQs) to get
+a strong traceability on the negotiation or after sales service issues. Use the
+claim management module to track issues related to vendors.
 
-        # Send the email to all specified recipients
-        composer.write({'partner_ids': [(6, 0, recipient_ids)]})  # Set recipient IDs
-        composer.send_mail()  # Send the email
+Standard Price, Average Price, FIFO
+-----------------------------------
 
-```
+Use the costing method that reflects your business: standard price, average
+price, fifo or lifo. Get your accounting entries and the right inventory
+valuation in real-time; Odoo manages everything for you, transparently.
 
-### Explanation of the Code
-1. **Set Up Context**: Context options include setting the mode to `mass_mail`, indicating that it’s a bulk operation.
-2. **Create the Composer Object**: Initialize `mail.compose.message` with the context you set up, providing it with message details (like `subject`, `body`, etc.).
-3. **Set Recipients**: The `partner_ids` field is set to contain the recipient IDs.
-4. **Send the Email**: `send_mail()` is called on the `composer` object to initiate sending the mass mail.
+Import Vendor Pricelists
+--------------------------
 
-### Using the Code
-After setting up the above method, you can call `send_mass_mail` with the required parameters like this:
+Take smart purchase decisions using the best prices.  Easily import vendor's
+pricelists to make smarter purchase decisions based on promotions, prices
+depending on quantities and special contract conditions. You can even base your
+sale price depending on your vendor's prices.
 
-```python
-# Sample call
-recipient_ids = [1, 2, 3]  # List of recipient partner IDs
-subject = "Newsletter"
-body = "<p>This is a newsletter for all customers</p>"
-model = 'res.partner'  # Model to associate the mail with
-res_id = 1  # A record ID for reference
+Control Products and Invoices
+-----------------------------
 
-# Call the method
-self.env['mail.compose.message'].send_mass_mail(recipient_ids, subject, body, model, res_id)
-```
+No product or order is left behind, the inventory control allows you to manage
+back orders, refunds, product reception and quality control. Choose the right
+control method according to your need.
 
-### Additional Notes
-- Ensure `recipient_ids` corresponds to the partner IDs in Odoo.
-- `res_id` and `model` should relate to a specific record and model, which could be `res.partner`, `sale.order`, or any other model in your use case.
-- You can also extend this to use email templates by setting `default_use_template=True` in the context if needed.
+Control vendor bills with no effort. Choose the right method according to
+your need: pre-generate draft invoices based on purchase orders, on products
+receptions, create invoices manually and import lines from purchase orders,
+etc.

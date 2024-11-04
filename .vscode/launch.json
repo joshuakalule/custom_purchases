@@ -1,0 +1,34 @@
+{
+    "configurations": [
+        {
+            "name": "Python Debugger: Python File",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "/home/kalule/odoo-17.0",
+            "program": "odoo-bin",
+            "args": [
+                "--addons-path=addons,../tutorials/",
+                "-d",
+                "demo",
+                "-u",
+                "custom_purchases",
+                "--smtp",
+                "localhost",
+                "--smtp-port",
+                "1025",
+                "--smtp-user",
+                " ",
+                "--smtp-password",
+                " ",
+                "--dev",
+                "all"
+            ],
+            "console": "integratedTerminal",
+            // "preLaunchTask": "clear-terminal",
+            "env": {
+                "PYTHONUNBUFFERED": "1",
+                "PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT": "1000000"
+            }
+        }
+    ]
+}

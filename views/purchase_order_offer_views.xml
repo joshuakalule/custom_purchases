@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Form view -->
+    <record id="purchase_order_offer_form" model="ir.ui.view">
+        <field name="name">purchase.order.offer.form</field>
+        <field name="model">purchase.order.offer</field>
+        <field name="arch" type="xml">
+            <form string="New Offer">
+                <sheet>
+                    <group>
+                        <field name="price"/>
+                        <field name="partner_id"/>
+                        <field name="status"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Tree view -->
+    <record id="purchase_order_offer_tree" model="ir.ui.view">
+        <field name="name">purchase.order.offer.tree</field>
+        <field name="model">purchase.order.offer</field>
+        <field name="arch" type="xml">
+            <tree string="View Offers">
+                <field name="price"/>
+                <field name="partner_id"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
